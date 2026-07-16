@@ -1,0 +1,118 @@
+/* 1. Basic Reset & Variables */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+:root {
+    --deep-navy: #0F4C81;
+    --river-blue: #2F80ED;
+    --bd-green: #2E8B57;
+    --light-bg: #F5F7FB;
+}
+
+body {
+    background-color: var(--light-bg);
+}
+
+/* 2. Navbar Container */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+    padding: 16px 5%;
+    box-shadow: 0 4px 12px rgba(15, 76, 129, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* 3. Logo */
+.logo {
+    height: 48px; /* Scales the SVG perfectly */
+    cursor: pointer;
+    display: block;
+}
+
+/* 4. Navigation Links */
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 32px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--deep-navy);
+    font-weight: 600;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover, 
+.nav-links a.active {
+    color: var(--river-blue);
+}
+
+/* 5. Primary Button (Login/Register) */
+.btn-primary {
+    text-decoration: none;
+    background-color: var(--bd-green);
+    color: white;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-primary:hover {
+    background-color: #246e45; /* Darker green for hover */
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(46, 139, 87, 0.2);
+}
+
+/* 6. Mobile Hamburger Icon (Hidden on Desktop) */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 5px;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background-color: var(--deep-navy);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+/* 7. Mobile Responsive Rules */
+@media (max-width: 850px) {
+    .nav-links, .nav-actions {
+        display: none; /* Hide desktop elements */
+    }
+
+    .hamburger {
+        display: flex; /* Show mobile menu icon */
+    }
+
+    /* When JavaScript adds the "active" class to nav-links */
+    .nav-links.active {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        padding: 24px 0;
+        text-align: center;
+        box-shadow: 0 8px 16px rgba(15, 76, 129, 0.08);
+        gap: 20px;
+    }
+}
