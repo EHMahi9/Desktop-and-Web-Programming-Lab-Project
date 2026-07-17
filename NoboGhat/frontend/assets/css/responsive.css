@@ -42,6 +42,26 @@ transform:rotate(90deg);
 
 }
 
+.problem-card,
+.solution-card{
+    padding:30px 24px;
+}
+
+.arrow-box{
+    width:64px;
+    height:64px;
+    font-size:1.4rem;
+}
+
+.problem-card h3,
+.solution-card h3{
+    font-size:1.35rem;
+}
+
+.section-title{
+    font-size:2rem;
+}
+
 }
 
 @media (max-width:768px){
