@@ -1,16 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Account Access | NoboGhat</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Access | NoboGhat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    
+    <!-- Shared Modular CSS -->
+    <link rel="stylesheet" href="../assets/css/navbar.css">
+    <link rel="stylesheet" href="../assets/css/footer.css">
+    
+    <!-- Auth Specific CSS -->
+    <link rel="stylesheet" href="../assets/css/auth.css">
 </head>
-<body>
-  <main class="container" style="padding: 64px 5%; min-height: 60vh;">
-    <h1>Account Access</h1>
-    <p>NoboGhat currently supports account registration. Secure sign-in will be enabled when the authentication service is added.</p>
-    <a class="btn-primary" href="../index.html#register">Register now</a>
-  </main>
+<body class="auth-body">
+
+    <!-- Minimal Navbar for Auth Page -->
+    <nav class="navbar">
+        <a href="../index.html" class="logo-link">
+            <h2 class="logo">NoboGhat</h2> 
+        </a>
+        <a href="../index.html" class="btn-outline-back"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+    </nav>
+
+    <!-- Authentication Container -->
+    <main class="auth-container">
+        <div class="auth-box">
+            
+            <!-- Tab Navigation -->
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="tab-login" onclick="toggleAuth('login')">Sign In</button>
+                <button class="auth-tab" id="tab-register" onclick="toggleAuth('register')">Register</button>
+            </div>
+
+            <!-- Login Form (FR-02) -->
+            <form id="loginForm" class="auth-form active">
+                <h2>Welcome Back</h2>
+                <p>Sign in to manage your inland waterway logistics.</p>
+                
+                <div class="input-group">
+                    <label for="loginPhone">Phone Number</label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-phone"></i>
+                        <input type="tel" id="loginPhone" placeholder="017XXXXXXXX" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="loginPassword">Password</label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="loginPassword" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary auth-btn">Sign In</button>
+                <p class="auth-footer-text">Forgot password? <a href="#">Recover account</a></p>
+            </form>
+
+            <!-- Registration Form (FR-01) -->
+            <form id="registerForm" class="auth-form hidden">
+                <h2>Create Account</h2>
+                <p>Join NoboGhat to book or share cargo space.</p>
+                
+                <div class="input-group">
+                    <label for="regName">Full Name</label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="regName" placeholder="e.g., Ebnul Hasan Mahi" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="regPhone">Phone Number</label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-phone"></i>
+                        <input type="tel" id="regPhone" placeholder="017XXXXXXXX" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="regRole">Select Your Role</label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <select id="regRole" required>
+                            <option value="" disabled selected>Choose a role...</option>
+                            <option value="farmer">Farmer</option>
+                            <option value="trader">Small Trader</option>
+                            <option value="owner">Boat Owner</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="regPassword">Password</label>
+                    <div class="input-with-icon">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="regPassword" placeholder="Create a secure password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary auth-btn">Create Account</button>
+            </form>
+
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../assets/js/auth.js"></script>
 </body>
 </html>

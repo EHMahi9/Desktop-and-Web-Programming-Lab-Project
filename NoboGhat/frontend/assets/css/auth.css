@@ -1,0 +1,155 @@
+/* Auth Page Background */
+.auth-body {
+    background: linear-gradient(135deg, #f4f7f6, #e0e8f5);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Minimal Navbar Adjustments */
+.btn-outline-back {
+    color: #0056b3;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.3s;
+}
+.btn-outline-back:hover {
+    color: #004494;
+}
+
+/* Auth Container */
+.auth-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.auth-box {
+    background: #ffffff;
+    width: 100%;
+    max-width: 450px;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+/* Tab Navigation */
+.auth-tabs {
+    display: flex;
+    border-bottom: 1px solid #eee;
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 1.2rem;
+    background: #f8f9fa;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.auth-tab.active {
+    background: #ffffff;
+    color: #0056b3;
+    border-bottom: 3px solid #0056b3;
+}
+
+/* Forms */
+.auth-form {
+    padding: 2.5rem 2rem;
+    display: none;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.auth-form.active {
+    display: block;
+}
+
+.auth-form h2 {
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+}
+
+.auth-form p {
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+/* Inputs */
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #444;
+    font-size: 0.9rem;
+}
+
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 15px;
+    color: #888;
+}
+
+.input-with-icon input,
+.input-with-icon select {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    appearance: none; /* Removes default dropdown styling */
+}
+
+.input-with-icon input:focus,
+.input-with-icon select:focus {
+    outline: none;
+    border-color: #0056b3;
+}
+
+/* Buttons & Footer */
+.auth-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 1.1rem;
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.auth-footer-text {
+    text-align: center;
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+}
+
+.auth-footer-text a {
+    color: #0056b3;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

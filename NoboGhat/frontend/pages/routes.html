@@ -1,23 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Available Trips | NoboGhat</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Trips | NoboGhat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    
+    <!-- Shared Modular CSS -->
+    <link rel="stylesheet" href="../assets/css/navbar.css">
+    <link rel="stylesheet" href="../assets/css/footer.css">
+    
+    <!-- Route Specific CSS -->
+    <link rel="stylesheet" href="../assets/css/routes.css">
 </head>
 <body>
-  <nav class="navbar">
-    <a href="../index.html" class="logo-link"><img src="../assets/images/illustrations/noboghat-svg.svg" alt="NoboGhat Logo" class="logo"></a>
-    <a href="../index.html" class="btn-primary">Home</a>
-  </nav>
-  <main class="container" style="padding: 64px 5%; min-height: 60vh;">
-    <h1>Available River Trips</h1>
-    <p>Browse the currently published boat trips for your selected route.</p>
-    <p id="routesError" hidden></p>
-    <section id="tripResults" aria-live="polite" style="margin-top: 32px;">Loading trips...</section>
-  </main>
-  <script src="../assets/js/api.js"></script>
-  <script src="../assets/js/routes.js"></script>
+
+    <!-- Reusable Navbar -->
+    <nav class="navbar">
+        <a href="../index.html" class="logo-link">
+            <h2 class="logo" style="color: #0056b3;">NoboGhat</h2> 
+        </a>
+        <ul class="nav-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="routes.html" class="active-link">Shipments</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+        </ul>
+        <a href="../index.html#register" class="btn-primary">Register</a>
+        
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </nav>
+
+    <!-- Page Header & Search Filter (Fulfills FR-09) -->
+    <header class="routes-header">
+        <div class="container">
+            <h1>Find Available Cargo Space</h1>
+            <p>Search verified river routes across Bangladesh.</p>
+            
+            <form id="routeSearchForm" class="advanced-search-form">
+                <label for="searchSource" class="sr-only">From</label>
+                <input type="text" id="searchSource" placeholder="From (e.g., Sadarghat)" title="Departure location" required>
+                <label for="searchDestination" class="sr-only">To</label>
+                <input type="text" id="searchDestination" placeholder="To (e.g., Khulna)" title="Destination location" required>
+                <label for="searchDate" class="sr-only">Date</label>
+                <input type="date" id="searchDate" title="Travel date" required>
+                <button type="submit" class="btn-search">
+                    <i class="fa-solid fa-magnifying-glass"></i> Search
+                </button>
+            </form>
+            <p id="routesError" class="error-text" hidden></p>
+        </div>
+    </header>
+
+    <!-- Available Trips Grid -->
+    <section class="trips-section">
+        <div class="container">
+            <div class="section-title-bar">
+                <h2>Scheduled Departures</h2>
+                <span class="results-count" id="resultsCount">Loading trips...</span>
+            </div>
+
+            <!-- This is the container your JavaScript will target -->
+            <div id="tripResults" class="trips-grid" aria-live="polite">
+                
+                <!-- Static Fallback / Mockup Data for Phase 1 & 2 -->
+                <div class="trip-card">
+                    <div class="trip-header">
+                        <span class="boat-name"><i class="fa-solid fa-ship"></i> JolTori Express</span>
+                        <span class="status-badge available">Available</span>
+                    </div>
+                    <div class="trip-body">
+                        <div class="route-info">
+                            <h4>Sadarghat</h4>
+                            <i class="fa-solid fa-arrow-right"></i>
+                            <h4>Khulna</h4>
+                        </div>
+                        <ul class="trip-details">
+                            <li><i class="fa-regular fa-calendar"></i> Oct 24, 2026 - 08:00 AM</li>
+                            <li><i class="fa-solid fa-weight-scale"></i> <strong>Available Capacity:</strong> 1200 kg</li>
+                            <li><i class="fa-solid fa-user-check"></i> Verified Owner</li>
+                        </ul>
+                    </div>
+                    <div class="trip-footer">
+                        <span class="price-estimate">Est. ৳50 / kg</span>
+                        <button class="btn-book">Book Space</button>
+                    </div>
+                </div>
+
+                <div class="trip-card">
+                    <div class="trip-header">
+                        <span class="boat-name"><i class="fa-solid fa-ship"></i> Padma Voyager</span>
+                        <span class="status-badge warning">Almost Full</span>
+                    </div>
+                    <div class="trip-body">
+                        <div class="route-info">
+                            <h4>Barisal</h4>
+                            <i class="fa-solid fa-arrow-right"></i>
+                            <h4>Dhaka</h4>
+                        </div>
+                        <ul class="trip-details">
+                            <li><i class="fa-regular fa-calendar"></i> Oct 25, 2026 - 06:00 AM</li>
+                            <li><i class="fa-solid fa-weight-scale"></i> <strong>Available Capacity:</strong> 250 kg</li>
+                            <li><i class="fa-solid fa-user-check"></i> Verified Owner</li>
+                        </ul>
+                    </div>
+                    <div class="trip-footer">
+                        <span class="price-estimate">Est. ৳45 / kg</span>
+                        <button class="btn-book">Book Space</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Shared Footer -->
+    <footer id="contact" class="site-footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 NoboGhat. All rights reserved. Developed by <span id="Mahi">Ebnul Hasan Mahi</span>.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/routes.js"></script>
+    <script src="../assets/js/main.js"></script> <!-- Required for mobile navbar toggle -->
 </body>
 </html>
