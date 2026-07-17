@@ -1,75 +1,50 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const hamburger = document.querySelector(".hamburger");
-  const navLinks = document.querySelector(".nav-links");
-  if (hamburger && navLinks) {
-    hamburger.addEventListener("click", () => navLinks.classList.toggle("active"));
-  }
-
-  const routeSearchForm = document.querySelector(".route-search-form");
+document.addEventListener("DOMContentLoaded", function() {
+  // Route Search Form Logic
+  var routeSearchForm = document.querySelector(".route-search-form");
   if (routeSearchForm) {
-    routeSearchForm.addEventListener("submit", (event) => {
+    routeSearchForm.addEventListener("submit", function(event) {
       event.preventDefault();
-      const source = document.getElementById("source").value.trim();
-      const destination = document.getElementById("destination").value.trim();
-      const query = new URLSearchParams({ source, destination });
-      window.location.href = `pages/routes.html?${query}`;
+      var source = document.getElementById("source").value.trim();
+      var destination = document.getElementById("destination").value.trim();
+      if (source && destination) {
+        var query = new URLSearchParams({ source: source, destination: destination });
+        window.location.href = "pages/routes.html?" + query.toString();
+      }
     });
   }
 
-  const registrationForm = document.getElementById("registrationForm");
-  if (!registrationForm) return;
+  // Registration Form on Index Page (index.html section)
+  var registrationForm = document.getElementById("registrationForm");
+  if (registrationForm) {
+    registrationForm.addEventListener("submit", async function(event) {
+      event.preventDefault();
+      var submitButton = registrationForm.querySelector('button[type="submit"]');
+      var payload = {
+        name: document.getElementById("regName").value.trim(),
+        phone: document.getElementById("regPhone").value.trim(),
+        role: document.getElementById("regRole").value
+      };
 
-  registrationForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const submitButton = registrationForm.querySelector('button[type="submit"]');
-    const payload = {
-      name: document.getElementById("regName").value.trim(),
-      phone: document.getElementById("regPhone").value.trim(),
-      role: document.getElementById("regRole").value
-    };
-
-    submitButton.disabled = true;
-    submitButton.textContent = "Registering...";
-    try {
-      const response = await fetch(window.NoboGhatApi.url("/api/auth/register"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Registration failed.");
-      alert(`Registration completed. Your user ID is ${data.userId}.`);
-      registrationForm.reset();
-    } catch (error) {
-      alert(error.message || "Could not reach the server. Please try again.");
-    } finally {
-      submitButton.disabled = false;
-      submitButton.textContent = "Register";
-    }
-  });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    
-    // --- Mobile Menu Toggle Logic ---
-    const hamburger = document.querySelector(".hamburger");
-    const navLinks = document.querySelector(".nav-links");
-
-    if (hamburger && navLinks) {
-        hamburger.addEventListener("click", () => {
-            // Toggles the 'active' class on and off upon clicking
-            hamburger.classList.toggle("active");
-            navLinks.classList.toggle("active");
+      submitButton.disabled = true;
+      submitButton.textContent = "Registering...";
+      try {
+        var api = window.NoboGhatApi;
+        var url = api ? api.url("/api/auth/register") : "/api/auth/register";
+        var response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
         });
-
-        // Close the menu automatically when a link is clicked
-        document.querySelectorAll(".nav-links li a").forEach(link => {
-            link.addEventListener("click", () => {
-                hamburger.classList.remove("active");
-                navLinks.classList.remove("active");
-            });
-        });
-    }
-
-    // ... (keep your existing search form logic below this) ...
+        var data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Registration failed.");
+        alert("Registration completed. Your user ID is " + data.userId + ".");
+        registrationForm.reset();
+      } catch (error) {
+        alert(error.message || "Could not reach the server. Please try again.");
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Register";
+      }
+    });
+  }
 });

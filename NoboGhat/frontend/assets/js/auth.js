@@ -5,60 +5,107 @@ function toggleAuth(tabName) {
     const registerForm = document.getElementById('registerForm');
     const tabLogin = document.getElementById('tab-login');
     const tabRegister = document.getElementById('tab-register');
+    // Hide any previous error
+    document.querySelectorAll('.auth-error').forEach(function(el) { el.classList.remove('visible'); });
+    // Re-enable submit buttons
+    document.querySelectorAll('.auth-btn').forEach(function(btn) { btn.disabled = false; btn.textContent = btn.getAttribute('data-original-text') || btn.textContent; });
 
     if (tabName === 'login') {
-        // Show Login, Hide Register
         loginForm.classList.add('active');
         loginForm.classList.remove('hidden');
         registerForm.classList.remove('active');
         registerForm.classList.add('hidden');
-        
-        // Update Tab styling
         tabLogin.classList.add('active');
         tabRegister.classList.remove('active');
     } else {
-        // Show Register, Hide Login
         registerForm.classList.add('active');
         registerForm.classList.remove('hidden');
         loginForm.classList.remove('active');
         loginForm.classList.add('hidden');
-        
-        // Update Tab styling
         tabRegister.classList.add('active');
         tabLogin.classList.remove('active');
     }
 }
 
-// Handle Form Submissions for Phase 3 MVP
-document.addEventListener("DOMContentLoaded", () => {
+// Shared submit helper - shows loading state, calls the API, handles errors
+async function submitAuthForm(form, endpoint, button) {
+    // Prevent double-submit
+    if (button.disabled) return;
     
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
+    // Hide any previous error
+    var errorEl = form.querySelector('.auth-error');
+    if (errorEl) errorEl.classList.remove('visible');
 
-    // Simulate Login Action
+    var originalText = button.textContent;
+    button.disabled = true;
+    button.textContent = 'Processing...';
+
+    try {
+        var formData = {};
+        var inputs = form.querySelectorAll('input, select');
+        for (var i = 0; i < inputs.length; i++) {
+            var inp = inputs[i];
+            if (inp.id) formData[inp.id] = inp.value.trim();
+        }
+
+        var response = await fetch(window.NoboGhatApi ? window.NoboGhatApi.url(endpoint) : endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+            var errData;
+            try { errData = await response.json(); } catch(e) { errData = {}; }
+            throw new Error(errData.message || errData.error || 'Request failed. Please try again.');
+        }
+
+        // Success - redirect to dashboard
+        window.location.href = 'dashboard.html';
+    } catch (error) {
+        if (errorEl) {
+            errorEl.textContent = error.message || 'Could not connect to server. Please try again.';
+            errorEl.classList.add('visible');
+        } else {
+            alert(error.message || 'Could not connect to server. Please try again.');
+        }
+    } finally {
+        button.disabled = false;
+        button.textContent = originalText;
+    }
+}
+
+// Handle Form Submissions
+document.addEventListener('DOMContentLoaded', function() {
+    
+    var loginForm = document.getElementById('loginForm');
+    var registerForm = document.getElementById('registerForm');
+
+    // Save original button texts for loading state restoration
+    document.querySelectorAll('.auth-btn').forEach(function(btn) {
+        btn.setAttribute('data-original-text', btn.textContent);
+    });
+
+    // Login Action
     if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            // In Phase 4, this will send a POST to /api/auth/login
-            // For now, redirect to the dashboard to test the UI flow
-            window.location.href = "dashboard.html";
+            var btn = loginForm.querySelector('.auth-btn');
+            submitAuthForm(loginForm, '/api/auth/login', btn);
         });
     }
 
-    // Simulate Register Action
+    // Register Action
     if (registerForm) {
-        registerForm.addEventListener('submit', (e) => {
+        registerForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            // In Phase 4, this will send a POST to /api/auth/register
-            // For now, redirect to the dashboard
-            window.location.href = "dashboard.html";
+            var btn = registerForm.querySelector('.auth-btn');
+            submitAuthForm(registerForm, '/api/auth/register', btn);
         });
     }
-});
 
-// Check if the URL came with a hash (e.g., index.html#register)
-window.onload = () => {
-    if (window.location.hash === "#register") {
+    // Check if the URL came with a hash (e.g., index.html#register)
+    if (window.location.hash === '#register') {
         toggleAuth('register');
     }
-};
+});

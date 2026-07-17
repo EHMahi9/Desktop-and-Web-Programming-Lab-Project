@@ -102,7 +102,7 @@ body {
         display: flex;
     }
 
-    .btn-primary {
+    .navbar .btn-primary {
         display: none;
     }
 
