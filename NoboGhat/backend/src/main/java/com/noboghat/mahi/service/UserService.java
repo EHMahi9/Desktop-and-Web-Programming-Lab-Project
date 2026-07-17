@@ -48,6 +48,11 @@ public class UserService {
         user.setName(registrationDto.getName().trim());
         user.setPhone(phone);
         user.setRole(role);
+        // Store password hash (simple hash for MVP — will use BCrypt in production)
+        String password = registrationDto.getPassword();
+        if (password != null && !password.isBlank()) {
+            user.setPasswordHash(Integer.toHexString(password.hashCode()));
+        }
         return userRepository.save(user);
     }
 }
