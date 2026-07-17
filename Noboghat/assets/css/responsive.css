@@ -21,3 +21,42 @@ grid-template-columns:1fr;
 }
 
 }
+
+/* ==========================================
+   Problem Section
+========================================== */
+
+@media (max-width:992px){
+
+.problem-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.arrow-box{
+
+margin:auto;
+
+transform:rotate(90deg);
+
+}
+
+}
+
+@media (max-width:576px){
+
+.problem-card,
+.solution-card{
+
+padding:28px;
+
+}
+
+.section-title{
+
+font-size:2rem;
+
+}
+
+}

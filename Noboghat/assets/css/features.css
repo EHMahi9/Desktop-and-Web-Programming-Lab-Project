@@ -1,0 +1,107 @@
+/* ==========================================
+   Features Section
+========================================== */
+
+.features-section{
+
+    padding:100px 6%;
+
+    background:#ffffff;
+
+}
+
+.features-section .container{
+
+    max-width:1300px;
+
+    margin:auto;
+
+}
+
+.features-grid{
+
+    margin-top:60px;
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:30px;
+
+}
+
+.feature-card{
+
+    background:#ffffff;
+
+    border-radius:18px;
+
+    padding:35px;
+
+    text-align:center;
+
+    border:1px solid rgba(15,76,129,.08);
+
+    box-shadow:0 15px 40px rgba(15,76,129,.06);
+
+    transition:.35s;
+
+}
+
+.feature-card:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:0 25px 45px rgba(15,76,129,.12);
+
+}
+
+.feature-icon{
+
+    width:85px;
+
+    height:85px;
+
+    margin:auto;
+
+    margin-bottom:25px;
+
+    border-radius:50%;
+
+    background:linear-gradient(
+        135deg,
+        var(--deep-navy),
+        var(--river-blue)
+    );
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:white;
+
+    font-size:2rem;
+
+}
+
+.feature-card h3{
+
+    font-family:"Poppins",sans-serif;
+
+    color:var(--deep-navy);
+
+    margin-bottom:18px;
+
+    font-size:1.3rem;
+
+}
+
+.feature-card p{
+
+    color:#64748b;
+
+    line-height:1.8;
+
+}
