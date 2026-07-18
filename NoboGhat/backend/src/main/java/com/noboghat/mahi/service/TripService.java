@@ -1,5 +1,7 @@
 package com.noboghat.mahi.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -34,6 +36,11 @@ public class TripService {
         Trip trip = new Trip();
         trip.setRoute(route);
         trip.setBoat(boat);
+
+        if (tripDto.getDepartureTime() != null && !tripDto.getDepartureTime().isBlank()) {
+            trip.setDepartureTime(LocalDateTime.parse(tripDto.getDepartureTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        }
+
         return tripRepository.save(trip);
     }
 

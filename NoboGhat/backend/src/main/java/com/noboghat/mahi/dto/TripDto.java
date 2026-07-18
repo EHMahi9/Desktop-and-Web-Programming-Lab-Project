@@ -7,6 +7,10 @@ import lombok.Data;
 public class TripDto {
     @NotNull(message = "Route ID is required")
     private Long routeId;
+
     @NotNull(message = "Boat ID is required")
     private Long boatId;
+
+    @NotNull(message = "Departure time is required")
+    private String departureTime;
 }
