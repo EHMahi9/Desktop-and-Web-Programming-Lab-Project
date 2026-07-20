@@ -25,21 +25,20 @@ public class SecurityConfig {
     private final JwtRequestFilter jwtRequestFilter;
     private final GoogleOAuth2SuccessHandler googleOAuth2SuccessHandler;
 
-    public SecurityConfig(JwtRequestFilter jwtRequestFilter,
+    public SecurityConfig(
+            JwtRequestFilter jwtRequestFilter,
             GoogleOAuth2SuccessHandler googleOAuth2SuccessHandler) {
         this.jwtRequestFilter = jwtRequestFilter;
         this.googleOAuth2SuccessHandler = googleOAuth2SuccessHandler;
     }
 
-    // 1. Password Encoder: Upgrading from simple hash to secure BCrypt
+    // 1. Password Encoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // 2. Authentication Provider: Tells Spring how to find users and check passwords
-    // UserService is injected here as a method parameter, NOT constructor parameter
-    // This breaks the circular dependency: SecurityConfig → UserService → PasswordEncoder
+    // 2. Authentication Provider
     @Bean
     public DaoAuthenticationProvider authenticationProvider(UserService userService) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userService);
@@ -47,54 +46,63 @@ public class SecurityConfig {
         return authProvider;
     }
 
-    // 3. Authentication Manager: The core engine that processes authentication requests
+    // 3. Authentication Manager
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
 
-    // 4. Security Filter Chain: Defining the rules for API access
+    // 4. Security Filter Chain
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, DaoAuthenticationProvider authProvider,
-            ObjectProvider<ClientRegistrationRepository> clientRegistrations) throws Exception {
+    public SecurityFilterChain filterChain(
+            HttpSecurity http,
+            DaoAuthenticationProvider authProvider,
+            ObjectProvider<ClientRegistrationRepository> clientRegistrations)
+            throws Exception {
+
         http
-            // Disable CSRF because our token-based API is stateless and not vulnerable to it
-            .csrf(csrf -> csrf.disable())
-            
-            // Define endpoint access rules based on your API Design
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/register", "/api/auth/login").permitAll() // Public access
-                .requestMatchers("/actuator/health").permitAll()
-                .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
-                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/trips/**", "/api/routes/**", "/api/boats/**").permitAll()
-                .requestMatchers("/api/admin/**").hasAuthority("ADMIN") // Role-based access for Admin Dashboard
-                .anyRequest().authenticated() // All other routes (boats, bookings, trips) require a valid JWT
-            )
-            
-            // Tell Spring NOT to create HTTP sessions (we are using JWTs instead)
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            
-            // Register our Authentication Provider (injected as @Bean parameter - no circular dependency!)
-            .authenticationProvider(authProvider)
+                .csrf(csrf -> csrf.disable())
 
-            .exceptionHandling(exceptions -> exceptions
-                .authenticationEntryPoint((request, response, exception) -> {
-                    response.setStatus(401);
-                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                    response.getWriter().write("{\"message\":\"Please sign in to continue.\"}");
-                })
-                .accessDeniedHandler((request, response, exception) -> {
-                    response.setStatus(403);
-                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                    response.getWriter().write("{\"message\":\"You do not have permission to access this resource.\"}");
-                }))
-            
-            // Insert our custom JWT filter BEFORE the standard Spring username/password filter
-            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+                        .requestMatchers("/actuator/health").permitAll()
+                        .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
+                        .requestMatchers(
+                                org.springframework.http.HttpMethod.GET,
+                                "/api/trips/**",
+                                "/api/routes/**",
+                                "/api/boats/**")
+                        .permitAll()
+                        .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                        .anyRequest().authenticated())
 
-        // The Google flow is enabled only if Google client credentials are supplied.
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                .authenticationProvider(authProvider)
+
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint((request, response, exception) -> {
+                            response.setStatus(401);
+                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                            response.getWriter()
+                                    .write("{\"message\":\"Please sign in to continue.\"}");
+                        })
+                        .accessDeniedHandler((request, response, exception) -> {
+                            response.setStatus(403);
+                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                            response.getWriter()
+                                    .write("{\"message\":\"You do not have permission to access this resource.\"}");
+                        }))
+
+                .addFilterBefore(
+                        jwtRequestFilter,
+                        UsernamePasswordAuthenticationFilter.class);
+
+        // Enable Google OAuth only if credentials are configured
         if (clientRegistrations.getIfAvailable() != null) {
-            http.oauth2Login(oauth -> oauth.successHandler(googleOAuth2SuccessHandler));
+            http.oauth2Login(oauth ->
+                    oauth.successHandler(googleOAuth2SuccessHandler));
         }
 
         return http.build();
