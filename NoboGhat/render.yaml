@@ -35,8 +35,9 @@ services:
       - key: JWT_SECRET
         sync: false
 
-  - type: static
+  - type: web
     name: noboghat-frontend
+    runtime: static
     buildCommand: echo "Static files ready"
     staticPublishPath: ./frontend
     region: oregon
