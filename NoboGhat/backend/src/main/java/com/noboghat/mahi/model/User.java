@@ -38,6 +38,7 @@ public class User {
     private String email;
 
     // Added to align with Database Schema and FR-02 (Authentication)
+    @JsonIgnore
     @Column(nullable = false)
     private String passwordHash;
 
