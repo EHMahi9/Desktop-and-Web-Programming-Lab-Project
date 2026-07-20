@@ -2,6 +2,8 @@ package com.noboghat.mahi.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -12,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
 import com.noboghat.mahi.service.UserService;
 
@@ -21,10 +24,13 @@ public class SecurityConfig {
 
     private final JwtRequestFilter jwtRequestFilter;
     private final UserService userService;
+    private final GoogleOAuth2SuccessHandler googleOAuth2SuccessHandler;
 
-    public SecurityConfig(JwtRequestFilter jwtRequestFilter, UserService userService) {
+    public SecurityConfig(JwtRequestFilter jwtRequestFilter, UserService userService,
+            GoogleOAuth2SuccessHandler googleOAuth2SuccessHandler) {
         this.jwtRequestFilter = jwtRequestFilter;
         this.userService = userService;
+        this.googleOAuth2SuccessHandler = googleOAuth2SuccessHandler;
     }
 
     // 1. Password Encoder: Upgrading from simple hash to secure BCrypt
@@ -49,7 +55,8 @@ public class SecurityConfig {
 
     // 4. Security Filter Chain: Defining the rules for API access
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http,
+            ObjectProvider<ClientRegistrationRepository> clientRegistrations) throws Exception {
         http
             // Disable CSRF because our token-based API is stateless and not vulnerable to it
             .csrf(csrf -> csrf.disable())
@@ -58,6 +65,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/register", "/api/auth/login").permitAll() // Public access
                 .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                 .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/trips/**", "/api/routes/**", "/api/boats/**").permitAll()
                 .requestMatchers("/api/admin/**").hasAuthority("ADMIN") // Role-based access for Admin Dashboard
                 .anyRequest().authenticated() // All other routes (boats, bookings, trips) require a valid JWT
@@ -68,9 +76,26 @@ public class SecurityConfig {
             
             // Register our Authentication Provider
             .authenticationProvider(authenticationProvider())
+
+            .exceptionHandling(exceptions -> exceptions
+                .authenticationEntryPoint((request, response, exception) -> {
+                    response.setStatus(401);
+                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                    response.getWriter().write("{\"message\":\"Please sign in to continue.\"}");
+                })
+                .accessDeniedHandler((request, response, exception) -> {
+                    response.setStatus(403);
+                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                    response.getWriter().write("{\"message\":\"You do not have permission to access this resource.\"}");
+                }))
             
             // Insert our custom JWT filter BEFORE the standard Spring username/password filter
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
+        // The Google flow is enabled only if Google client credentials are supplied.
+        if (clientRegistrations.getIfAvailable() != null) {
+            http.oauth2Login(oauth -> oauth.successHandler(googleOAuth2SuccessHandler));
+        }
 
         return http.build();
     }

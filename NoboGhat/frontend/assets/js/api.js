@@ -10,6 +10,10 @@
             return apiBaseUrl + path;
         },
 
+        googleLoginUrl: function () {
+            return apiBaseUrl ? apiBaseUrl + "/oauth2/authorization/google" : "/api/auth/google";
+        },
+
         authHeaders: function () {
             var token = localStorage.getItem("noboghatToken");
             return token ? { "Authorization": "Bearer " + token } : {};

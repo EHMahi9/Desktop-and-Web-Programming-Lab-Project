@@ -8,6 +8,14 @@ NoboGhat is a Spring Boot and MySQL application with a static frontend for river
 2. Start the API from `NoboGhat/backend` with `./mvnw spring-boot:run` (Windows: `mvnw.cmd spring-boot:run`).
 3. Serve `NoboGhat/frontend` with a static server on port 5500. The frontend will use `http://localhost:8080` automatically.
 
+### Database upgrade and administrator
+
+If you already created the database before the Google-login update, run `database/migration-v2-auth.sql` **once** in MySQL. New databases are created automatically by JPA.
+
+To create the first administrator, set `ADMIN_PHONE` and `ADMIN_PASSWORD` in `backend/.env`, then start the backend once. Do not expose these values. The admin dashboard is available only to this `ADMIN` account.
+
+See `docs/ARCHITECTURE.md` for the design, `docs/GOOGLE_LOGIN_SETUP.md` for Google setup, and `docs/PRESENTATION_NOTES.md` for a project demonstration script.
+
 ## Railway deployment
 
 Set the Railway service root directory to `NoboGhat/backend`. The included `railway.toml` builds the JAR and uses `/actuator/health` as its health check. Configure these Railway variables with the values from your MySQL service:
