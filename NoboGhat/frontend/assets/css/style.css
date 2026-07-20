@@ -71,7 +71,7 @@ body {
 }
 
 .btn-primary {
-    background-color: var(--bd-green);
+    background-color: #1f5c35;
     color: #ffffff;
     padding: 0.6rem 1.5rem;
     text-decoration: none;
@@ -81,9 +81,15 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: #246e45;
+    background-color: #18462a;
     transform: translateY(-1px);
 }
+
+button {
+    background-color: #1f5c35;
+    color: #ffffff;
+}
+
 
 .hamburger {
     display: none;
@@ -462,12 +468,13 @@ body {
 .footer-bottom {
     text-align: center;
     padding-top: 25px;
-    color: #64748B;
+    color: #475569;
     font-size: 0.85rem;
 }
 
-#Mahi   {
+#Mahi {
     font-weight: bold;
+    color: #0F172A;
 }
 
 
