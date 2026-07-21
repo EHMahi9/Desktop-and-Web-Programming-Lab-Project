@@ -34,22 +34,10 @@ services:
         sync: false
 
       - key: SPRING_DATASOURCE_URL
-        fromDatabase:
-          name: noboghat-db
-          property: connectionString
+        sync: false
 
       - key: SPRING_DATASOURCE_USERNAME
-        fromDatabase:
-          name: noboghat-db
-          property: user
+        sync: false
 
       - key: SPRING_DATASOURCE_PASSWORD
-        fromDatabase:
-          name: noboghat-db
-          property: password
-
-databases:
-  - name: noboghat-db
-    databaseName: noboghat
-    plan: free
-    region: oregon
+        sync: false
