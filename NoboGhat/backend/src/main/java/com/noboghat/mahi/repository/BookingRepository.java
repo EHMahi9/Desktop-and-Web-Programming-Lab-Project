@@ -15,4 +15,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     double totalReservedCargoWeight(@Param("tripId") Long tripId);
 
     List<Booking> findAllByUserUserIdOrderByBookingIdDesc(Long userId);
+
+    long countByTripTripId(Long tripId);
 }
