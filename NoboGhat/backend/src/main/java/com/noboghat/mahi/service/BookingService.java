@@ -67,6 +67,11 @@ public class BookingService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<BookingSummaryDto> getAllBookingsForAdmin() {
+        return bookingRepository.findAll().stream().map(this::toSummaryDto).toList();
+    }
+
     @Transactional
     public void cancelBooking(Long id, String requester, boolean isAdmin) {
         Booking booking = bookingRepository.findById(id)

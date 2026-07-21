@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", async function() {
   var boatsBody = document.getElementById("boatsBody");
   var boatForm = document.getElementById("boatForm");
   var boatMessage = document.getElementById("boatMessage");
+  var bookingsBody = document.getElementById("bookingsBody");
 
   function setBoatMessage(text, type) {
     if (!boatMessage) return;
@@ -28,6 +29,22 @@ document.addEventListener("DOMContentLoaded", async function() {
     });
   }
 
+  async function loadBookings() {
+    var response = await fetch(api.url("/api/admin/bookings"), { headers: api.authHeaders() });
+    if (!response.ok) throw new Error("Bookings could not be loaded.");
+    var bookings = await response.json();
+    bookingsBody.innerHTML = "";
+    if (!bookings.length) {
+      bookingsBody.innerHTML = "<tr><td colspan=\"5\">No bookings found.</td></tr>";
+      return;
+    }
+    bookings.forEach(function (booking) {
+      var row = document.createElement("tr");
+      row.innerHTML = "<td>#NBG-" + booking.bookingId + "</td><td>" + booking.source + " → " + booking.destination + "</td><td>" + booking.cargoWeight + " kg</td><td>" + booking.status + "</td><td><button type='button' class='btn-outline' data-cancel='" + booking.bookingId + "'>Cancel</button></td>";
+      bookingsBody.appendChild(row);
+    });
+  }
+
   try {
     var response = await fetch(api.url("/api/admin/dashboard"), { headers: api.authHeaders() });
     if (!response.ok) throw new Error("Dashboard data could not be loaded.");
@@ -37,12 +54,19 @@ document.addEventListener("DOMContentLoaded", async function() {
     document.getElementById("totalBookings").textContent = data.totalBookings;
     document.getElementById("totalCargoWeight").textContent = data.totalCargoWeight + " kg";
     await loadBoats();
+    await loadBookings();
 
     boatsBody.addEventListener("click", async function (event) {
       var id = event.target.getAttribute("data-delete");
       if (!id) return;
       await fetch(api.url("/api/boats/" + id), { method: "DELETE", headers: api.authHeaders() });
       await loadBoats();
+    });
+    bookingsBody.addEventListener("click", async function (event) {
+      var id = event.target.getAttribute("data-cancel");
+      if (!id) return;
+      await fetch(api.url("/api/bookings/" + id), { method: "DELETE", headers: api.authHeaders() });
+      await loadBookings();
     });
 
     if (boatForm) {
