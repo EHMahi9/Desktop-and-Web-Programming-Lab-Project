@@ -505,4 +505,6 @@ Possible causes:
 **Project Status**: ✅ Complete & Production-Ready  
 **Version**: 1.0.0  
 **Last Updated**: 21st July 2026  
-**Semester**: Desktop & Web Programming Lab (SE 236)
+**Semester**: Summer 2026
+**Subject**: Desktop & Web Programming Lab (SE 236)
+
