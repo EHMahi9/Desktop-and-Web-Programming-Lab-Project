@@ -19,11 +19,13 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final TripRepository tripRepository;
     private final UserService userService;
+    private final NotificationService notificationService;
 
-    public BookingService(BookingRepository bookingRepository, TripRepository tripRepository, UserService userService) {
+    public BookingService(BookingRepository bookingRepository, TripRepository tripRepository, UserService userService, NotificationService notificationService) {
         this.bookingRepository = bookingRepository;
         this.tripRepository = tripRepository;
         this.userService = userService;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -44,7 +46,9 @@ public class BookingService {
         booking.setStatus("PENDING");
         booking.setUser(user);
         booking.setTrip(trip);
-        return bookingRepository.save(booking);
+        Booking saved = bookingRepository.save(booking);
+        notificationService.createForUser(requester, "Your booking for trip #" + trip.getTripId() + " has been created.");
+        return saved;
     }
 
     public Booking getBookingById(Long id, String requester, boolean isAdmin) {

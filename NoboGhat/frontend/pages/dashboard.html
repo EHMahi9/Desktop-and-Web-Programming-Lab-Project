@@ -52,7 +52,7 @@
                 <li><a href="#" class="active"><i class="fa-solid fa-gauge"></i> Overview</a></li>
                 <li><a href="#"><i class="fa-solid fa-box-open"></i> Active Bookings</a></li>
                 <li><a href="#my-trips-section"><i class="fa-solid fa-ship"></i> My Trips</a></li>
-                <li><a href="#"><i class="fa-solid fa-bell"></i> Notifications</a></li>
+                <li><a href="#notifications-section"><i class="fa-solid fa-bell"></i> Notifications <span id="notificationCount"></span></a></li>
                 <li><a href="#"><i class="fa-solid fa-gear"></i> Profile Settings</a></li>
             </ul>
         </aside>
@@ -154,6 +154,25 @@
                         <button type="submit" class="btn-book">Save Changes</button>
                     </form>
                     <p id="profileMessage" class="booking-message" hidden></p>
+                </div>
+            </section>
+
+            <section class="recent-history" id="notifications-section">
+                <h2>Notifications</h2>
+                <div class="table-responsive">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Message</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="notificationsBody">
+                            <tr><td colspan="4">Loading notifications...</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
         </main>
