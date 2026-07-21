@@ -57,6 +57,31 @@
         </div>
     </header>
 
+    <section class="booking-section" id="bookingSection" hidden>
+        <div class="container">
+            <div class="booking-panel">
+                <div class="booking-panel-header">
+                    <div>
+                        <p class="booking-eyebrow">Book Cargo</p>
+                        <h2>Confirm your booking</h2>
+                    </div>
+                    <button type="button" class="booking-close" id="closeBookingPanel" aria-label="Close booking panel">×</button>
+                </div>
+
+                <div class="booking-details" id="bookingTripDetails"></div>
+
+                <form id="bookingForm" class="booking-form">
+                    <input type="hidden" id="bookingTripId">
+                    <label for="bookingCargoWeight">Cargo weight (kg)</label>
+                    <input type="number" id="bookingCargoWeight" min="1" step="0.1" placeholder="Enter cargo weight" required>
+                    <button type="submit" class="btn-book">Confirm Booking</button>
+                </form>
+
+                <p id="bookingMessage" class="booking-message" hidden></p>
+            </div>
+        </div>
+    </section>
+
     <!-- Available Trips Grid -->
     <section class="trips-section">
         <div class="container">
@@ -68,7 +93,7 @@
             <!-- This is the container your JavaScript will target -->
             <div id="tripResults" class="trips-grid" aria-live="polite">
                 
-                <!-- Static Fallback / Mockup Data for Phase 1 & 2 -->
+                <!-- Static fallback retained until live data loads -->
                 <div class="trip-card">
                     <div class="trip-header">
                         <span class="boat-name"><i class="fa-solid fa-ship"></i> JolTori Express</span>
